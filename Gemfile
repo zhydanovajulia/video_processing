@@ -7,6 +7,7 @@ ruby '2.6.2'
 gem 'rails', '~> 6.0.0'
 gem 'mongoid', '~> 7.0.5'
 gem 'grape'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
