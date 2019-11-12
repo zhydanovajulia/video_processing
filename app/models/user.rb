@@ -3,5 +3,8 @@ class User
 
   field :token, type: String
 
+  has_many :videos
+
+  validates :token, presence: true
 end
 
