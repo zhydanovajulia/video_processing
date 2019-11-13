@@ -25,9 +25,31 @@ RSpec.describe 'api/v1/create_video' do
         api_call params
 
         expect(JSON.parse(response.body)['url']).to be_present
+        expect(JSON.parse(response.body)['url']).to eq(url)
       end
     end
 
+    context 'failed because' do
+
+      describe 'token missing' do
+        let(:params) {{ file: url }}
+        it_behaves_like '401'
+        it_behaves_like 'contains error msg', 'access denied'
+      end
+
+      describe 'incorrect token' do
+        let(:params) {{ token: "11111", file: url }}
+        it_behaves_like '401'
+        it_behaves_like 'contains error msg', 'access denied'
+      end
+
+      describe 'file missing' do
+        let(:params) {{ token: user.token }}
+        it_behaves_like '400'
+        it_behaves_like 'contains error msg', 'file is missing'
+      end
+
+    end
   end
 end
 
