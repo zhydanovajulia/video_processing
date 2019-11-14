@@ -3,7 +3,7 @@ class Subscribe::APIv1 < Grape::API
 
   format :json
 
-  desc 'End-points for the registering user'
+  desc 'Regist user'
     namespace :subscribe do
       desc 'Get token to identify user'
 

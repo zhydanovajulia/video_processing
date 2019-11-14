@@ -6,7 +6,7 @@ module VideoService
     video.user = user
     video.start_time = start_time
     video.end_time = end_time
-    video.duration = video.end_time - video.end_time
+    video.duration = end_time.to_i - start_time.to_i
     video
   end
 end

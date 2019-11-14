@@ -1,4 +1,5 @@
 class VideoUploader < CarrierWave::Uploader::Base
+
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -14,7 +15,7 @@ class VideoUploader < CarrierWave::Uploader::Base
   end
 
   def size_range
-    1..10.megabytes
+    1..250.megabytes
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:

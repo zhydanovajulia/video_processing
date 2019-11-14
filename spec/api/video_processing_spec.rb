@@ -4,6 +4,12 @@ require 'sidekiq/testing'
 RSpec.describe 'api/v1/create_video' do
 
   context "create video" do
+
+    before do
+      Sidekiq::Testing.inline!
+      allow_any_instance_of(Video).to receive(:process_video).and_return(true)
+    end
+
     def api_call params
       post "/api/v1/create_video", params: params
     end
@@ -19,17 +25,13 @@ RSpec.describe 'api/v1/create_video' do
 
       let(:params) { original_params }
 
-      before do
-        Sidekiq::Testing.inline!
-      end
-
       it_behaves_like '200'
       it_behaves_like 'json result'
 
       it 'returns the link to the uploaded video' do
-
-        allow(VideoService).to receive(:build_new_video).with(url, user, start_time, end_time).and_return(video)
         allow(video).to receive(:url).and_return(url)
+        allow(VideoService).to receive(:build_new_video).with(url, user, start_time, end_time).and_return(video)
+
 
         api_call params
 
@@ -42,6 +44,7 @@ RSpec.describe 'api/v1/create_video' do
     end
 
     context 'failed because' do
+
       describe 'token missing' do
         let(:params) { original_params.except :token }
         it_behaves_like '401'
@@ -64,6 +67,11 @@ RSpec.describe 'api/v1/create_video' do
   end
 
   context "retry video processing" do
+    before do
+      Sidekiq::Testing.inline!
+      allow_any_instance_of(Video).to receive(:process_video).and_return(true)
+    end
+
     def api_call params
       put "/api/v1/retry_processing_video", params: params
     end
@@ -72,25 +80,15 @@ RSpec.describe 'api/v1/create_video' do
     let(:video) { create :video, user: user }
     let(:url) { "some/url" }
 
-    before do
-      Sidekiq::Testing.inline!
-    end
-
     context 'successfully' do
 
       let(:params) { {token: user.token, video_id: video.id} }
-
-      before do
-        Sidekiq::Testing.inline!
-      end
 
       it_behaves_like '200'
       it_behaves_like 'json result'
 
       it 'returns the link to the uploaded video' do
-
         allow_any_instance_of(Video).to receive(:url).and_return(url)
-
         api_call params
 
         expect(video.reload.file_processing).to eq(2)
@@ -104,6 +102,10 @@ RSpec.describe 'api/v1/create_video' do
   end
 
   context "get all videos" do
+    before do
+      Sidekiq::Testing.inline!
+      allow_any_instance_of(Video).to receive(:process_video).and_return(true)
+    end
 
     def api_call params
       get "/api/v1/video_list", params: params
@@ -121,6 +123,7 @@ RSpec.describe 'api/v1/create_video' do
       allow_any_instance_of(Video).to receive(:url).and_return(url)
       api_call params
 
+      expect(JSON.parse(response.body).first['file_processing']).to be_present
       expect(JSON.parse(response.body).first['url']).to be_present
       expect(JSON.parse(response.body).first['url']).to eq(url)
       expect(JSON.parse(response.body).first['user_id']['$oid']).to eq(user.id.to_s)

@@ -6,11 +6,15 @@ class VideoProcessing::APIv1 < Grape::API
     @current_user = current_user
   end
 
-  desc 'Video provessing'
+  desc 'Video creation and provessing API'
+
   namespace :create_video do
     desc 'Upload new video with time frame'
     params do
-      requires :token, :file, :start_time, :end_time
+      requires :token, type: String, documentation: { desc: "Unique token to identify user" }
+      requires :file, documentation: { desc: "Path to file to be uploaded" }
+      requires :start_time, type: String, documentation: { desc: "The beginning of video" }
+      requires :end_time, type: String, documentation: { desc: "The ending of video" }
     end
 
     post do
@@ -26,7 +30,8 @@ class VideoProcessing::APIv1 < Grape::API
     desc 'Retry to process video'
 
     params do
-      requires :token, :video_id
+      requires :token, type: String, documentation: { desc: "Unique token to identify user" }
+      requires :video_id, type: String, documentation: { desc: "ID of the video to be processed" }
     end
 
     put do
@@ -43,7 +48,7 @@ class VideoProcessing::APIv1 < Grape::API
     desc 'Get list of all videos'
 
     params do
-      requires :token
+      requires :token, type: String, documentation: { desc: "Unique token to identify user" }
     end
 
     get do

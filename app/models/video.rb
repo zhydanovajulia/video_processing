@@ -22,12 +22,18 @@ class Video
 
   def perform_processing
     self.file_processing = self.class.statuses[:processing]
-    #processing video file
+    process_video
     self.file_processing = self.class.statuses[:done]
   rescue Exception => e
     self.file_processing = self.class.statuses[:failed]
   ensure
-    self.save!
+    self.save
+  end
+
+  def process_video
+    self.duration = self.end_time - self.start_time
+    processing_time = rand 20..50
+    sleep processing_time
   end
 
   def url
