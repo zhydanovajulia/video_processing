@@ -12,6 +12,10 @@
 
 rspec
 
+* Database
+
+mongodb-community@4.2
+
 * API routes
 
 GET        /api/:version/subscribe(.json)
