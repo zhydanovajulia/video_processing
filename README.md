@@ -12,9 +12,11 @@
 
 rspec
 
-* Database
+* Database MongoDB
 
-mongodb-community@4.2
+brew tap mongodb/brew
+
+brew install mongodb-community@4.2
 
 * API routes
 
