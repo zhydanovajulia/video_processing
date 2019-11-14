@@ -42,8 +42,13 @@ class VideoProcessing::APIv1 < Grape::API
   namespace :video_list do
     desc 'Get list of all videos'
 
+    params do
+      requires :token
+    end
+
     get do
-      present @current_user.videos
+      status 200
+      present @current_user.videos, with: API::Entities::VideoEntity
     end
   end
 

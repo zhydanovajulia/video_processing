@@ -7,6 +7,7 @@ class Video
   field :end_time, type: Integer
 
   validates :duration, presence: true
+  validates :file_processing, presence: true
 
   mount_uploader :file, VideoUploader, mount_on: :file_filename
 

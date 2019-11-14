@@ -7,6 +7,7 @@ ruby '2.6.2'
 gem 'rails', '~> 6.0.0'
 gem 'mongoid', '~> 7.0.5'
 gem 'grape'
+gem 'grape-entity'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'sidekiq'
 # Use Puma as the app server

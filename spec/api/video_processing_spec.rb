@@ -102,6 +102,31 @@ RSpec.describe 'api/v1/create_video' do
     end
 
   end
+
+  context "get all videos" do
+
+    def api_call params
+      get "/api/v1/video_list", params: params
+    end
+
+    let!(:user) { create :user }
+    let!(:video) { create :video, user: user }
+    let(:url) { "some/url" }
+    let(:params) { { token: user.token } }
+
+    it_behaves_like '200'
+    it_behaves_like 'json result'
+
+    it 'returns the list of given user videos' do
+      allow_any_instance_of(Video).to receive(:url).and_return(url)
+      api_call params
+
+      expect(JSON.parse(response.body).first['url']).to be_present
+      expect(JSON.parse(response.body).first['url']).to eq(url)
+      expect(JSON.parse(response.body).first['user_id']['$oid']).to eq(user.id.to_s)
+      expect(JSON.parse(response.body).first['id']['$oid']).to eq(video.id.to_s)
+    end
+  end
 end
 
 
